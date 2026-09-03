@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model api_keys {
+  id          BigInt     @id @default(autoincrement())
+  key         String     @unique @db.VarChar(100)
+  secret_hash String
+  user_id     BigInt
+  is_active   Boolean    @default(true)
+  created_at  DateTime   @default(now()) @db.Timestamptz(6)
+  expires_at  DateTime?  @db.Timestamptz(6)
+  users       users      @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "fk_api_keys_user")
+  api_logs    api_logs[]
+
+  @@index([user_id], map: "idx_api_keys_user_id")
+}
+
+model api_logs {
+  id               BigInt    @id @default(autoincrement())
+  endpoint         String    @db.VarChar(500)
+  method           String?   @db.VarChar(10)
+  response_time_ms Int?
+  status_code      Int?
+  api_key_id       BigInt?
+  user_id          BigInt?
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  api_keys         api_keys? @relation(fields: [api_key_id], references: [id], map: "fk_api_logs_api_key")
+  users            users?    @relation(fields: [user_id], references: [id], map: "fk_api_logs_user")
+
+  @@index([api_key_id], map: "idx_api_logs_api_key_id")
+  @@index([created_at], map: "idx_api_logs_created_at")
+  @@index([user_id], map: "idx_api_logs_user_id")
+}
+
+model countries {
+  id         BigInt   @id @default(autoincrement())
+  name       String   @unique(map: "countries_name_unique") @db.VarChar(100)
+  code       String   @unique @db.VarChar(10)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  states     states[]
+}
+
+model districts {
+  id            BigInt          @id @default(autoincrement())
+  code          String          @db.VarChar(20)
+  name          String          @db.VarChar(150)
+  state_id      BigInt
+  created_at    DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime        @default(now()) @db.Timestamptz(6)
+  states        states          @relation(fields: [state_id], references: [id], map: "fk_districts_state")
+  sub_districts sub_districts[]
+
+  @@unique([state_id, code], map: "districts_state_code_unique")
+  @@index([name], map: "idx_districts_name")
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "idx_districts_name_trgm", type: Gin)
+  @@index([state_id], map: "idx_districts_state_id")
+}
+
+model states {
+  id                BigInt              @id @default(autoincrement())
+  code              String              @db.VarChar(10)
+  name              String              @db.VarChar(150)
+  country_id        BigInt
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
+  districts         districts[]
+  countries         countries           @relation(fields: [country_id], references: [id], map: "fk_states_country")
+  user_state_access user_state_access[]
+
+  @@unique([country_id, code], map: "states_country_code_unique")
+  @@index([country_id], map: "idx_states_country_id")
+  @@index([name], map: "idx_states_name")
+}
+
+model sub_districts {
+  id          BigInt     @id @default(autoincrement())
+  code        String     @db.VarChar(20)
+  name        String     @db.VarChar(200)
+  district_id BigInt
+  created_at  DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime   @default(now()) @db.Timestamptz(6)
+  districts   districts  @relation(fields: [district_id], references: [id], map: "fk_sub_districts_district")
+  villages    villages[]
+
+  @@unique([district_id, code], map: "sub_districts_district_code_unique")
+  @@index([district_id], map: "idx_sub_districts_district_id")
+  @@index([name], map: "idx_sub_districts_name")
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "idx_sub_districts_name_trgm", type: Gin)
+}
+
+model user_state_access {
+  user_id    BigInt
+  state_id   BigInt
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  states     states   @relation(fields: [state_id], references: [id], onDelete: Cascade, map: "fk_user_state_access_state")
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "fk_user_state_access_user")
+
+  @@id([user_id, state_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model users {
+  id                BigInt              @id @default(autoincrement())
+  email             String              @unique @db.VarChar(255)
+  password_hash     String
+  plan_type         String              @default("FREE") @db.VarChar(50)
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
+  api_keys          api_keys[]
+  api_logs          api_logs[]
+  user_state_access user_state_access[]
+}
+
+model villages {
+  id              BigInt        @id @default(autoincrement())
+  code            String        @db.VarChar(30)
+  name            String        @db.VarChar(250)
+  sub_district_id BigInt
+  created_at      DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime      @default(now()) @db.Timestamptz(6)
+  sub_districts   sub_districts @relation(fields: [sub_district_id], references: [id], map: "fk_villages_sub_district")
+
+  @@unique([sub_district_id, code], map: "villages_sub_district_code_unique")
+  @@index([name], map: "idx_villages_name")
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "idx_villages_name_trgm", type: Gin)
+  @@index([sub_district_id], map: "idx_villages_sub_district_id")
+}
