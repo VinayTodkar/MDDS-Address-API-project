@@ -16,3 +16,5 @@ build/
 
 # Logs
 *.log
+# Raw MDDS datasets
+data-import/data/
