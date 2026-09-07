@@ -1,107 +1,329 @@
-# MDDS Address API 🇮🇳
+# 🇮🇳 MDDS Address API
 
-A REST API for accessing and searching India's administrative address hierarchy using **MDDS (Metadata and Data Standards)** codes.
+A full-stack India Administrative Address API built using official MDDS (Metadata and Data Standards) datasets.
 
-The project is designed to provide structured access to **States, Districts, Sub-Districts, and Villages**, making Indian administrative location data easier to integrate into applications such as address forms, logistics systems, government applications, delivery platforms, and location-based services.
+The project provides structured access to India's administrative hierarchy:
 
-> 🚧 **Project Status:** Work in Progress
-> The data validation and initial backend/database setup are complete. Additional API functionality, authentication, rate limiting, and production features are being developed.
+**State → District → Sub-District → Village**
 
----
-
-## 📌 Features
-
-### Current
-
-* Indian administrative hierarchy data model
-* MDDS code-based identification
-* State → District → Sub-District → Village hierarchy
-* Dataset inspection and validation scripts
-* Duplicate and missing-value validation
-* Hierarchy consistency validation
-* PostgreSQL database support
-* Prisma ORM integration
-* Neon PostgreSQL database support
-* Express.js REST API foundation
-* Health-check endpoint
-* Address API route structure
-* Raw datasets excluded from Git history/repository
-
-### Planned
-
-* [ ] Complete address search API
-* [ ] State listing endpoint
-* [ ] District-by-state endpoint
-* [ ] Sub-district-by-district endpoint
-* [ ] Village-by-sub-district endpoint
-* [ ] Village autocomplete/search
-* [ ] Pagination
-* [ ] API authentication
-* [ ] API key management
-* [ ] Rate limiting
-* [ ] API usage logging
-* [ ] Swagger/OpenAPI documentation
-* [ ] Production deployment
-* [ ] Automated testing
-* [ ] CI/CD pipeline
+The system combines a validated MDDS data pipeline, Neon PostgreSQL database, Express.js REST APIs, and a React frontend for searching and exploring Indian administrative location data.
 
 ---
 
-## 🏗️ Architecture
+## 👥 Team Project
+
+This project was developed collaboratively by **3 team members**, with responsibilities divided across the data, backend, and frontend layers.
+
+### Team Contributions
+
+| Team Member | Contribution |
+|---|---|
+| **Vinay Sunil Todkar** | MDDS dataset collection, inspection, validation, data cleaning, data-import pipeline, NeonDB integration, Prisma/database work and backend support |
+| **Priya Singh** | Express.js backend development and REST API implementation |
+| **Frontend Developer** | React frontend, dashboard, search interface and user-facing features |
+
+---
+
+## 👨‍💻 My Contribution — Vinay Sunil Todkar
+
+My primary responsibility in this project was the **data engineering and database layer**, along with backend support.
+
+### Data Engineering
+
+- Collected and organized MDDS state-wise datasets
+- Inspected the structure of the datasets
+- Validated required columns
+- Checked missing values
+- Checked duplicate records
+- Validated MDDS state codes
+- Validated district codes
+- Validated sub-district codes
+- Validated village codes
+- Performed administrative hierarchy validation
+- Investigated and documented data-quality issues
+- Generated dataset validation reports
+- Prepared validated datasets for database import
+
+### Database / Backend Support
+
+- Worked with Neon PostgreSQL
+- Worked with Prisma ORM
+- Prepared the database structure for administrative data
+- Developed and maintained data-import scripts
+- Supported integration between the database and Express backend
+- Assisted with backend API development
+
+---
+
+# 🎯 Project Objective
+
+The objective of MDDS Address API is to provide a centralized and structured way to access Indian administrative location data through APIs.
+
+The platform follows the hierarchy:
 
 ```text
-                    ┌─────────────────────┐
-                    │      Client         │
-                    │ Web / Mobile / App  │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │    Express.js API   │
-                    │      REST Layer     │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │       Prisma        │
-                    │        ORM          │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │ PostgreSQL / Neon   │
-                    │    Database         │
-                    └─────────────────────┘
+India
+  │
+  └── State
+       │
+       └── District
+            │
+            └── Sub-District
+                 │
+                 └── Village
 
-Data Pipeline
+This makes the data useful for applications that require reliable Indian location and address information.
 
-MDDS Datasets
-     │
-     ▼
-Python Import Scripts
-     │
-     ▼
-Validation
-     │
-     ▼
-Clean Structured Data
-     │
-     ▼
-PostgreSQL / Neon
-```
+🏗️ System Architecture
+┌──────────────────────────────┐
+│       MDDS DATASETS          │
+│   Government Location Data   │
+└──────────────┬───────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│       VINAY TODKAR           │
+│  Data Import & Validation    │
+└──────────────┬───────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│           NEONDB             │
+│      PostgreSQL Database     │
+└──────────────┬───────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│       PRIYA SINGH            │
+│      EXPRESS BACKEND         │
+└──────────────┬───────────────┘
+               │
+               ├── /api/v1/states
+               ├── /api/v1/districts
+               ├── /api/v1/sub-districts
+               ├── /api/v1/villages
+               └── /api/v1/search
+               │
+               ▼
+┌──────────────────────────────┐
+│           Darshan            |
+|        REACT FRONTEND        │
+└──────────────┬───────────────┘
+               │
+               ├── Dashboard
+               ├── Villages
+               ├── Users
+               ├── API Logs
+               ├── Settings
+               └── Search
+🔄 Data Flow
+MDDS Raw Datasets
+        ↓
+Dataset Inspection
+        ↓
+Data Validation
+        ↓
+Data Cleaning
+        ↓
+Validation Reports
+        ↓
+Neon PostgreSQL
+        ↓
+Prisma ORM
+        ↓
+Express.js Backend
+        ↓
+REST API
+        ↓
+React Frontend
+        ↓
+Dashboard / Search / Village Explorer
+📊 MDDS Dataset
 
----
+The project uses state-wise MDDS administrative datasets.
 
-## 🗂️ Project Structure
+The main fields include:
 
-```text
+MDDS STC
+STATE NAME
+MDDS DTC
+DISTRICT NAME
+MDDS Sub_DT
+SUB-DISTRICT NAME
+MDDS PLCN
+Area Name
+
+These fields establish the administrative relationship:
+
+State Code
+    ↓
+District Code
+    ↓
+Sub-District Code
+    ↓
+Village Code
+🧹 Dataset Validation
+
+A dedicated Python validation pipeline was developed to check the quality and consistency of the MDDS datasets before database import.
+
+## The validation process includes:
+
+Dataset Structure Validation
+
+Checks whether all required columns are available.
+
+Missing Value Validation
+
+Identifies missing values in important administrative fields.
+
+Duplicate Validation
+
+Detects duplicate records.
+
+State Code Validation
+
+Checks state-level MDDS codes.
+
+District Code Validation
+
+Checks district-level MDDS codes.
+
+Sub-District Code Validation
+
+Checks sub-district identifiers.
+
+Village Code Validation
+
+Checks village/location identifiers.
+
+Hierarchy Validation
+
+Verifies relationships between:
+
+State
+ ↓
+District
+ ↓
+Sub-District
+ ↓
+Village
+🐍 Data Import Pipeline
+
+The data processing scripts are located in:
+
+data-import/
+
+Important files:
+
+data-import/
+│
+├── import_to_neon.py
+├── inspect_datasets.py
+├── validate_datasets.py
+├── inspection_report.txt
+│
+└── reports/
+    ├── validation_summary.csv
+    └── validation_notes.md
+Run Dataset Validation
+cd data-import
+python validate_datasets.py
+
+The validation results are stored in:
+
+data-import/reports/
+🗄️ Database
+
+The project uses PostgreSQL on Neon as the cloud database and Prisma as the ORM.
+
+Database hierarchy
+State
+  ↓
+District
+  ↓
+Sub-District
+  ↓
+Village
+
+The Prisma schema is located at:
+
+backend/prisma/schema.prisma
+🚀 REST API
+
+The Express backend exposes endpoints for accessing the administrative hierarchy.
+
+States
+GET /api/v1/states
+
+Returns state and union territory information.
+
+Districts
+GET /api/v1/districts
+
+Returns district-level administrative data.
+
+Sub-Districts
+GET /api/v1/sub-districts
+
+Returns sub-district-level information.
+
+Villages
+GET /api/v1/villages
+
+Returns village-level administrative data.
+
+Search
+GET /api/v1/search
+
+Provides location search functionality.
+
+🔗 API Request Flow
+React Frontend
+      ↓
+Express.js API
+      ↓
+Prisma ORM
+      ↓
+Neon PostgreSQL
+      ↓
+JSON Response
+      ↓
+React Frontend
+
+Example:
+
+User selects a State
+        ↓
+Frontend requests Districts
+        ↓
+Express API
+        ↓
+Prisma Database Query
+        ↓
+Neon PostgreSQL
+        ↓
+District data returned
+        ↓
+Frontend displays Districts
+🎨 React Frontend
+
+The frontend provides a user interface for interacting with the API and exploring administrative data.
+
+Main interface areas include:
+
+Dashboard
+Villages
+Users
+API Logs
+Settings
+Search
+
+The React application communicates with the Express API rather than directly accessing the database.
+
+📁 Project Structure
 mdds-address-api/
 │
 ├── backend/
-│   ├── .agents/
-│   ├── .claude/
-│   ├── .cursor/
-│   ├── .devin/
 │   │
 │   ├── prisma/
 │   │   └── schema.prisma
@@ -123,7 +345,9 @@ mdds-address-api/
 │   └── test-prisma.js
 │
 ├── data-import/
-│   ├── data/                    # Local only - not committed
+│   │
+│   ├── data/
+│   │   └── MDDS datasets
 │   │
 │   ├── import_to_neon.py
 │   ├── inspect_datasets.py
@@ -134,438 +358,216 @@ mdds-address-api/
 │       ├── validation_summary.csv
 │       └── validation_notes.md
 │
+├── frontend/
+│
 ├── schema.sql
 ├── test_db.py
 ├── .gitignore
 └── README.md
-```
-
----
-
-## 🛠️ Technology Stack
-
-| Technology     | Purpose                         |
-| -------------- | ------------------------------- |
-| **Node.js**    | Backend runtime                 |
-| **Express.js** | REST API framework              |
-| **Prisma**     | Database ORM                    |
-| **PostgreSQL** | Relational database             |
-| **Neon**       | Serverless PostgreSQL           |
-| **Python**     | Data processing/import pipeline |
-| **Pandas**     | Dataset processing              |
-| **Git/GitHub** | Version control                 |
-
----
-
-# 📊 Data Model
-
-The core administrative hierarchy is:
-
-```text
-India
- │
- └── State
-      │
-      └── District
-           │
-           └── Sub-District
-                │
-                └── Village
-```
-
-Each level is associated with an MDDS identifier.
-
-The source datasets use fields such as:
-
-```text
-MDDS STC
-STATE NAME
-
-MDDS DTC
-DISTRICT NAME
-
-MDDS Sub_DT
-SUB-DISTRICT NAME
-
-MDDS PLCN
-Area Name
-```
-
----
-
-# 🔄 Data Import Pipeline
-
-The project includes a Python-based pipeline for processing the original MDDS datasets.
-
-```text
-Raw Dataset
-     │
-     ▼
-Dataset Inspection
-     │
-     ▼
-Column Validation
-     │
-     ▼
-Missing Value Check
-     │
-     ▼
-Duplicate Check
-     │
-     ▼
-Code Validation
-     │
-     ▼
-Hierarchy Validation
-     │
-     ▼
-Clean Dataset
-     │
-     ▼
-Neon PostgreSQL
-```
-
-### Validation Checks
-
-The validation pipeline checks for:
-
-* Missing values
-* Duplicate records
-* Invalid state codes
-* Invalid district codes
-* Invalid sub-district codes
-* Invalid village codes
-* Hierarchy inconsistencies
-* Expected column structure
-
-Validation reports are stored under:
-
-```text
-data-import/reports/
-```
-
----
-
-# 🚀 Getting Started
-
-## 1. Clone the repository
-
-```bash
+🛠️ Technology Stack
+Technology	Purpose
+Python	Dataset processing and validation
+Pandas	Data analysis and validation
+Node.js	Backend runtime
+Express.js	REST API
+Prisma	ORM and database access
+PostgreSQL	Relational database
+Neon	Cloud PostgreSQL
+React	Frontend
+Git	Version control
+GitHub	Source code management
+⚙️ Backend Setup
+1. Clone the Repository
 git clone https://github.com/VinayTodkar/MDDS-Address-API-project.git
 cd MDDS-Address-API-project
-```
-
----
-
-## 2. Backend Setup
-
-Move into the backend directory:
-
-```bash
+2. Install Backend Dependencies
 cd backend
-```
-
-Install dependencies:
-
-```bash
 npm install
-```
+3. Configure Environment Variables
 
----
+Create:
 
-## 3. Configure Environment Variables
-
-Create a `.env` file inside `backend/`.
+backend/.env
 
 Example:
 
-```env
 DATABASE_URL="your_neon_database_connection_string"
 PORT=3000
-```
 
-> ⚠️ Never commit your `.env` file or database credentials to GitHub.
+Do not commit .env or database credentials to GitHub.
 
-A `.env.example` file will be added as the project develops.
-
----
-
-## 4. Configure Prisma
-
-After configuring the database connection:
-
-```bash
-npx prisma generate
-```
-
-Run migrations when migrations are configured:
-
-```bash
-npx prisma migrate dev
-```
-
----
-
-## 5. Start the Development Server
-
-```bash
+4. Start the Backend
 npm start
-```
 
-or, if a development script is configured:
+For development:
 
-```bash
 npm run dev
-```
+🧪 Database Testing
 
-The local API will be available at:
+Database connectivity can be tested using:
 
-```text
-http://localhost:3000
-```
-
----
-
-# ❤️ Health Check
-
-The project contains a health-check route for verifying that the API server is running.
-
-Example:
-
-```http
-GET /health
-```
-
-Expected response will depend on the current implementation.
-
----
-
-# 🔌 API Design
-
-The planned API follows a hierarchy-based structure.
-
-### Get all states
-
-```http
-GET /states
-```
-
-### Get districts for a state
-
-```http
-GET /states/{id}/districts
-```
-
-### Get sub-districts for a district
-
-```http
-GET /districts/{id}/subdistricts
-```
-
-### Get villages for a sub-district
-
-```http
-GET /subdistricts/{id}/villages
-```
-
-### Search villages
-
-```http
-GET /search?q={query}
-```
-
-### Autocomplete
-
-```http
-GET /autocomplete?q={query}
-```
-
-> These endpoints represent the project's API design/roadmap. Endpoints should only be considered production-ready once their implementation and tests are completed.
-
----
-
-# 🔎 Example Address Hierarchy
-
-A location can be represented as:
-
-```json
-{
-  "village": "Manibeli",
-  "subDistrict": "Akkalkuwa",
-  "district": "Nandurbar",
-  "state": "Maharashtra",
-  "country": "India"
-}
-```
-
-This structure is intended to make the API convenient for applications that need dependent address selection.
-
-For example:
-
-```text
-Select State
-     ↓
-Select District
-     ↓
-Select Sub-District
-     ↓
-Select Village
-```
-
----
-
-# 🔐 Security
-
-Security features are planned for future development.
-
-Planned security mechanisms include:
-
-* API key authentication
-* Secure API secrets
-* Rate limiting
-* Input validation
-* Request logging
-* Secure HTTP headers
-* Environment-based secrets
-* Database credential protection
-
----
-
-# 📈 Future Roadmap
-
-## Phase 1 — Data Foundation
-
-* [x] Collect MDDS datasets
-* [x] Inspect datasets
-* [x] Validate datasets
-* [x] Create database schema
-* [x] Configure Prisma
-* [x] Configure Neon PostgreSQL
-* [x] Create import pipeline
-
-## Phase 2 — API Development
-
-* [x] Express application foundation
-* [x] Health endpoint
-* [x] Address routes foundation
-* [ ] State API
-* [ ] District API
-* [ ] Sub-district API
-* [ ] Village API
-* [ ] Search API
-* [ ] Autocomplete API
-* [ ] Pagination
-
-## Phase 3 — Security & API Management
-
-* [ ] API authentication
-* [ ] API key management
-* [ ] Rate limiting
-* [ ] Usage tracking
-* [ ] Request logging
-
-## Phase 4 — Production
-
-* [ ] Automated tests
-* [ ] Swagger/OpenAPI
-* [ ] CI/CD
-* [ ] Production deployment
-* [ ] Monitoring
-* [ ] Performance optimization
-
----
-
-# 🧪 Testing
-
-Testing is currently under development.
-
-The project contains database testing utilities:
-
-```text
-test_db.py
 backend/test-prisma.js
-```
 
-Future testing will include:
+Additional database testing utilities are available in:
 
-* API endpoint tests
-* Database integration tests
-* Validation tests
-* Error handling tests
-* Search tests
-* Pagination tests
-* Performance tests
+test_db.py
+💡 Use Cases
 
----
+The API can be used in applications that require Indian administrative location data, including:
 
-# 📦 Dataset Notice
+Address forms
+E-commerce applications
+Delivery and logistics platforms
+Government applications
+Location-based services
+Customer registration systems
+Address verification systems
+KYC workflows
+Business applications
+Location autocomplete
+Data analysis applications
+🌟 Key Project Highlights
+Data Engineering
+State-wise MDDS dataset processing
+Automated dataset validation
+Missing-value detection
+Duplicate detection
+Administrative code validation
+Hierarchy validation
+Validation reporting
+Database-ready data preparation
+Backend
+Express.js REST API
+Prisma ORM
+PostgreSQL database
+Neon cloud database
+Administrative hierarchy endpoints
+Frontend
+React-based interface
+Dashboard
+Location search
+Village exploration
+API-related management screens
+📈 Project Status
+Component	Status
+MDDS Dataset Collection	✅ Completed
+Dataset Inspection	✅ Completed
+Dataset Validation	✅ Completed
+Validation Reports	✅ Completed
+Data Import Pipeline	✅ Completed
+NeonDB Integration	✅ Completed
+Prisma Database Layer	✅ Completed
+Backend Foundation	✅ Completed
+REST API	🚧 Team Development
+React Frontend	🚧 Team Development
+Dashboard	🚧 Team Development
+Search	🚧 Team Development
+API Logs	🚧 Team Development
+Authentication	🚧 Future Enhancement
+Production Deployment	🚧 Future Enhancement
+🤝 Team Architecture
 
-The original MDDS datasets are **not included in this GitHub repository**.
+The project is divided into three major layers:
 
-They are intentionally excluded using:
+┌─────────────────────────────────────┐
+│           DATA LAYER                │
+│                                     │
+│      Vinay Sunil Todkar             │
+│      MDDS Data + Database           │
+└──────────────────┬──────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────┐
+│          BACKEND LAYER              │
+│                                     │
+│          Priya Singh                │
+│       Express.js REST API           │
+└──────────────────┬──────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────┐
+│         FRONTEND LAYER              │
+│                                     │
+│       React Application              │
+│ Dashboard / Villages / Search       │
+└─────────────────────────────────────┘
+📚 What I Learned
 
-```gitignore
-data-import/data/
-```
+Through this project, I gained practical experience in:
 
-This keeps the repository lightweight and avoids redistributing source datasets without confirming their applicable licensing/usage terms.
+Data engineering
+Data cleaning
+Dataset validation
+ETL pipelines
+Python and Pandas
+PostgreSQL
+Neon cloud databases
+Prisma ORM
+Backend integration
+REST APIs
+Git and GitHub
+Team collaboration
+Full-stack application architecture
+🔗 Repository
 
-To run the import pipeline locally, place the required datasets inside:
+GitHub Repository:
 
-```text
-data-import/data/
-```
+https://github.com/VinayTodkar/MDDS-Address-API-project
 
----
+👨‍💻 Contributors
+Vinay Sunil Todkar
 
-# 🤝 Contributing
+Data Engineering | Database | Backend Support
 
-This project is currently under active development.
+Main responsibilities:
 
-If you would like to contribute:
+MDDS datasets
+Data inspection
+Data validation
+Data cleaning
+Data import
+NeonDB
+Prisma
+Database integration
+Backend support
+Priya Singh
 
-```bash
-git fork
-git clone <your-fork>
-git checkout -b feature/your-feature
-```
+Backend Developer
 
-Make your changes, test them, and submit a pull request.
+Main responsibilities:
 
----
+Express.js
+REST API
+Backend architecture
+API integration
+Frontend Developer
 
-# 📄 License
+Frontend Developer
 
-License information will be added once the project's source-data and software licensing requirements have been finalized.
+Main responsibilities:
 
----
+React
+Dashboard
+Search
+Village interface
+User-facing application
+📄 License
 
-# 👨‍💻 Author
+This project was developed as a collaborative academic/software development project.
 
-**Vinay Sunil Todkar**
+🚀 MDDS Address API
+MDDS DATA
+    ↓
+DATA VALIDATION
+    ↓
+NEONDB
+    ↓
+EXPRESS.JS
+    ↓
+REST APIs
+    ↓
+REACT
+    ↓
+DASHBOARD + SEARCH + VILLAGES
 
-B.Tech — Artificial Intelligence & Data Science
-
-GitHub:
-https://github.com/VinayTodkar
-
----
-
-# ⭐ Project Status
-
-```text
-MDDS Address API
-────────────────────────────────
-
-Data Pipeline       ████████████████████ 100%
-Data Validation     ████████████████████ 100%
-Database Setup      ███████████████░░░░░  75%
-API Development     ████████░░░░░░░░░░░░  40%
-Authentication      ██░░░░░░░░░░░░░░░░░░  10%
-Testing             ███░░░░░░░░░░░░░░░░░  15%
-Production          ░░░░░░░░░░░░░░░░░░░░   0%
-
-Overall: 🚧 Work in Progress
-```
-
-> **Goal:** Build a reliable, scalable API for structured Indian administrative address data.
+Building a structured and accessible administrative location platform for India.
